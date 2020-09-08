@@ -239,6 +239,7 @@ webpack-dev-middleware는 웹팩으로 빌드한 정적파일을 처리하는 �
 
 [webpack-hot-middleware 참고](https://github.com/webpack-contrib/webpack-hot-middleware)
 [webpack-dev-middleware 참고](https://webpack.js.org/guides/development/#using-webpack-dev-middleware)
+[webpack-dev-middleware github](https://github.com/webpack/webpack-dev-middleware)
 
 * 라이브러리 설치
 ```
