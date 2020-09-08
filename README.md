@@ -1,6 +1,5 @@
 ## Webpack
 ------
-![webpack](./image/webpack.png)
 ### 1. webpack(웹팩) 이란?
 * 자바스크립트 정적 모듈 번들러 (Static Module Bundler)
 * 웹팩에서의 모든 것은 모듈이다. 상호 의존성이 있는 모듈을을 사용해 그 모듈들과 같은 역활은 하는 정적 에셋들을 생성한다,
@@ -49,7 +48,7 @@ npm i webpack webpack-cli --save-dev
 ```
 3. 라이브러리 설치
 ```
-npm install -save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader clean-webpack-plugin css-loader html-loader html-webpack-plugin mini-css-extract-plugin node-sass react react-dom sass-loader style-loader webpack webpack-cli webpack-dev-server webpack-dev-middleware
+npm install -save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader clean-webpack-plugin css-loader html-loader file-loader url-loader html-webpack-plugin mini-css-extract-plugin node-sass react react-dom sass-loader style-loader webpack webpack-cli webpack-dev-server webpack-dev-middleware
 ```
 4. `webpack.config.js` 파일 생성
 ...
@@ -161,5 +160,52 @@ plugins: [
   })
 ]
 ```
+### 4-4 File 빌드
+* `./webpack.config.js` 수정
+```js
+{
+  test: /\.(png|jpg|gif|svg)$/i,
+  use: [
+    {
+      loader: 'url-loader',
+      options: {
+        limit: 0, // [value]kb 미만 파일만 data-url로 처리
+        name: 'assets/[hash].[ext]' // 파일명 형식
+      }
+    }
+  ]
+}
+```
 
 ### 5. clean-webpack-plugin 적용
+빌드 될 때 마다 clean-webpack-plugin 을 통해 안쓰는 파일들을 삭제
+* `./webpack.config.js` 수정
+```js
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+plugins: [
+  new CleanWebpackPlugin()
+],
+```
+
+### 6. webpack build mode
+* development: 빠른 빌드를 위해 최적화 X
+* production: 빌드 시 최적화
+
+### 7. webpack-dev-server 
+실시간 리로드 기능을 갖춘 새발 서버
+* 디스크에 저장되지 않는 메모리 컴파일을 사용하기 때문에 컴파일 속도가 빨라김
+* webpack.config.js 에도 devServer옵션을 통해 지정하여 사용가능
+```
+npm install -D (--save-dev 약자) webpack-dev-server
+```
+* `webpack.config.js` 수정
+```js
+devServer: {
+  contentBase: path.join(__dirname, 'src'), // 콘텐츠를 제공할 경로지정 (정적파일을 제공하려는 경우에만 필요)
+  compress: true, //모든 항목에 대해 gzip압축 사용
+  hot: true, //webpack의 HMR 기능 활성화
+  host: 'localhost',
+  port: 8080 //접속 포트 설정
+},
+```
+
