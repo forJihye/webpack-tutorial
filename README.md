@@ -205,7 +205,9 @@ devServer: {
   compress: true, //모든 항목에 대해 gzip압축 사용
   hot: true, //webpack의 HMR 기능 활성화
   host: 'localhost',
-  port: 8080 //접속 포트 설정
+  port: 8080 //접속 포트 설정,
+  noInfo: true,
+  inline: true
 },
 ```
 * `package.json` 명령어 추가
@@ -217,10 +219,26 @@ devServer: {
 }
 ```
 
-### 8. webpack-dev-middleware
+### 8. inline-source-map
+예를들어 a.js, b.js, c.js 세가지 파일을 bundle.js 하나의 파일로 번들링 했을 때, a.js 파일에서 에러가 발생시
+에러는 단지 bundle.js 파일에 에러가 발생되었다고 말하기 때문에 정확히 어디서 에러가 났는지 확인하지 못합니다.
+쉽게 에러를 트래킹하기 위해서 inline-source-map를 사용해야합니다.
+```js
+// webpack.config.js
+{
+  ...,
+  devtool: 'inline-source-map'
+  // devtool: isDev ? 'inline-source-map' : false,
+}
+```
+
+### 9. webpack-dev-middleware, webpack-hot-middleware
 webpack-dev-middleware는 웹팩으로 빌드한 정적파일을 처리하는 익스프레스 스타일 미들웨어이다.
 웹팩 패키지가 제공하는 함수를 실행하면 Compiler 타입의 인스턴스를 반환해준다,
 웹팩 설정 객체를 함수 인자로 전달하는데 보통은 설정 파일 `webpack.config.js`에 있는 코드를 가져다 사용한다.
+
+[webpack-hot-middleware 참고](https://github.com/webpack-contrib/webpack-hot-middleware)
+[webpack-dev-middleware 참고](https://webpack.js.org/guides/development/#using-webpack-dev-middleware)
 
 * 라이브러리 설치
 ```
@@ -228,11 +246,56 @@ npm install --save-dev express webpack-hot-middleware webpack-dev-middleware --s
 ```
 ```js
 // server.js
-const middleware = require('webpack-dev-middleware');
-const compiler = webpack(require('./webpack.config.js'));
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const config = require('./webpack.config.js');
+const compiler = webpack(config);
 const express= require('express');
 const app = express();
+
+app.use(webpackDevMiddleware(compiler, {
+  hot: true,
+  noInfo: false,
+  publicPath: config.output.publicPath,
+  stats: 'minimal',
+  historyApiFallback: true
+}));
+
+app.use(webpackHotMiddleware(compiler, {
+  log: console.log
+}));
+
+app.listen(3000, function () {
+  console.log('http://localhost:3000');
+});
 ```
+
+* `./webpack/entry.js` 파일 생성
+```js
+require('../src/main.js');
+
+if(module.hot) {
+  module.hot.accept(); // This will make current module replaceable
+}
+```
+
+* `./webpack.config.js` entry 경로 수정
+```js
+{
+  entry: isDev ? ['webpack-hot-middleware/client', './webpack/entry.js'] : './webpack/entry.js',
+  output: {
+    path: pathResolve('dist'),
+    filename: isDev ? '[name].js' : 'dist.js',
+    publicPath: '/'
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ],
+}
+```
+
 * `package.json` 명령어 추가
 ```js
 {
@@ -242,14 +305,12 @@ const app = express();
 }
 ```
 
-### 9. inline-source-map
-예를들어 a.js, b.js, c.js 세가지 파일을 bundle.js 하나의 파일로 번들링 했을 때, a.js 파일에서 에러가 발생시
-에러는 단지 bundle.js 파일에 에러가 발생되었다고 말하기 때문에 정확히 어디서 에러가 났는지 확인하지 못합니다.
-쉽게 에러를 트래킹하기 위해서 inline-source-map를 사용해야합니다.
+* 모드 설정 시 (development, production)
 ```js
-// webpack.config.js
 {
-  ...,
-  devtool: 'inline-source-map'
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack",
+    "start": "cross-env NODE_ENV=development node server"
+  }
 }
 ```
