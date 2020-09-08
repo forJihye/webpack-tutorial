@@ -208,4 +208,48 @@ devServer: {
   port: 8080 //접속 포트 설정
 },
 ```
+* `package.json` 명령어 추가
+```js
+{
+  "scripts": {
+    "start": "webpack-dev-server --open"
+  }
+}
+```
 
+### 8. webpack-dev-middleware
+webpack-dev-middleware는 웹팩으로 빌드한 정적파일을 처리하는 익스프레스 스타일 미들웨어이다.
+웹팩 패키지가 제공하는 함수를 실행하면 Compiler 타입의 인스턴스를 반환해준다,
+웹팩 설정 객체를 함수 인자로 전달하는데 보통은 설정 파일 `webpack.config.js`에 있는 코드를 가져다 사용한다.
+
+* 라이브러리 설치
+```
+npm install --save-dev express webpack-hot-middleware webpack-dev-middleware --save
+```
+```js
+// server.js
+const middleware = require('webpack-dev-middleware');
+const compiler = webpack(require('./webpack.config.js'));
+const express= require('express');
+const app = express();
+```
+* `package.json` 명령어 추가
+```js
+{
+  "scripts": {
+    "server": "node server.js"
+  }
+}
+```
+
+### 9. inline-source-map
+예를들어 a.js, b.js, c.js 세가지 파일을 bundle.js 하나의 파일로 번들링 했을 때, a.js 파일에서 에러가 발생시
+에러는 단지 bundle.js 파일에 에러가 발생되었다고 말하기 때문에 정확히 어디서 에러가 났는지 확인하지 못합니다.
+쉽게 에러를 트래킹하기 위해서 inline-source-map를 사용해야합니다.
+```js
+// webpack.config.js
+{
+  ...,
+  devtool: 'inline-source-map'
+}
+```

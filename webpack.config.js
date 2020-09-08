@@ -4,21 +4,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const isDev = process.env.NODE_ENV === 'development';
-
 const pathResolve = dir => path.resolve(__dirname, dir);
+
 module.exports = {
   mode: isDev ? 'development' : 'production',
-  entry: './src/main.js',
+  entry: isDev ? ['webpack-hot-middleware/client', './webpack/entry.js'] : './webpack/entry.js',
   output: {
     path: pathResolve('dist'),
-    filename: isDev ? '[name].js' : 'dist.js'
+    filename: isDev ? '[name].js' : 'dist.js',
+    publicPath: '/'
   },
   devServer: {
     contentBase: path.join(__dirname, 'src'),
-    compress: true,
-    hot: true,
-    host: 'localhost',
-    port: 8080
+    noInfo: true,
+    inline: true
   },
   module: {
     rules: [
@@ -51,13 +50,17 @@ module.exports = {
       }
     ]
   },
+  devtool: isDev ? 'inline-source-map' : false,
   plugins: [
     new HtmlWebpackPlugin({template: './public/index.html'}),
     new MiniCssExtractPlugin({
       filename: 'assets/[name].css',
       chunkFilename: 'assets/[id].css',
     }),
-    new CleanWebpackPlugin({default: ['dist']})
+    new CleanWebpackPlugin({default: ['dist']}),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   optimization: {
     minimize: !isDev
