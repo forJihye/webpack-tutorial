@@ -51,7 +51,7 @@ npm i webpack webpack-cli --save-dev
 npm install -save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader clean-webpack-plugin css-loader html-loader file-loader url-loader html-webpack-plugin mini-css-extract-plugin node-sass react react-dom sass-loader style-loader webpack webpack-cli webpack-dev-server webpack-dev-middleware
 ```
 4. `webpack.config.js` 파일 생성
-...
+
 5. `package.json` 내용수정
 ```json
 ... 
@@ -192,7 +192,7 @@ plugins: [
 * production: 빌드 시 최적화
 
 ### 7. webpack-dev-server 
-실시간 리로드 기능을 갖춘 새발 서버
+실시간 리로드 기능을 갖춘 개발 서버
 * 디스크에 저장되지 않는 메모리 컴파일을 사용하기 때문에 컴파일 속도가 빨라김
 * webpack.config.js 에도 devServer옵션을 통해 지정하여 사용가능
 ```
@@ -237,8 +237,8 @@ webpack-dev-middleware는 웹팩으로 빌드한 정적파일을 처리하는 �
 웹팩 패키지가 제공하는 함수를 실행하면 Compiler 타입의 인스턴스를 반환해준다,
 웹팩 설정 객체를 함수 인자로 전달하는데 보통은 설정 파일 `webpack.config.js`에 있는 코드를 가져다 사용한다.
 
-[webpack-hot-middleware 참고](https://github.com/webpack-contrib/webpack-hot-middleware)
-[webpack-dev-middleware 참고](https://webpack.js.org/guides/development/#using-webpack-dev-middleware)
+[webpack-hot-middleware 참고](https://github.com/webpack-contrib/webpack-hot-middleware),
+[webpack-dev-middleware 참고](https://webpack.js.org/guides/development/#using-webpack-dev-middleware),
 [webpack-dev-middleware github](https://github.com/webpack/webpack-dev-middleware)
 
 * 라이브러리 설치
