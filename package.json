@@ -5,8 +5,9 @@
   "main": "dist/build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production webpack",
-    "start": "cross-env NODE_ENV=development node webpack/server"
+    "start": "cross-env NODE_ENV=development node webpack",
+    "dev": "cross-env NODE_ENV=development node webpack/dev-server.js",
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",
@@ -43,5 +44,9 @@
     "webpack-cli": "3.3.12",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "kill-port": "^1.6.1"
   }
 }

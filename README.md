@@ -390,3 +390,8 @@ clearTimeouf(timeout);
 `...setInterval, requestAnimationFrame` 도 만찬가지
 
 위 코드가 하는 기능은 HMR 모듈이 다시 생성될 때 수정 전에 사용되었던 `setTimeout, setInterval, requestAnimationFrame` 함수를 모두 멈추고 다시 실행되로록 해준다. (함수들이 겹치지 않기위해)
+
+-----
+### jsconfig.json
+
+
