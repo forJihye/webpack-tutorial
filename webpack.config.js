@@ -23,14 +23,18 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: '/node_modules',
+        exclude: ['/node_modules', path.resolve('src')],
         use: ['babel-loader']
       },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader
+          isDev ? 'style-loader'
+          : {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '/',
+            }
           },
           'css-loader',
           'sass-loader'
@@ -51,6 +55,11 @@ module.exports = {
     ]
   },
   devtool: isDev ? 'inline-source-map' : false,
+  resolve: {
+    alias: {
+      '~': pathResolve('src')
+    }
+  },
   plugins: [
     new HtmlWebpackPlugin({template: './public/index.html'}),
     new MiniCssExtractPlugin({

@@ -123,9 +123,12 @@ export default Root;
 ```
 {
   "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
 }
 ```
-
+`regeneratorRuntime is not defined` 에러 발생 시 `@babel/plugin-transform-runtime` 플러그인 추가 (async/await)
 * `webpack.config.js` 수정
 ```js
 ...
@@ -237,6 +240,8 @@ webpack-dev-middleware는 웹팩으로 빌드한 정적파일을 처리하는 �
 웹팩 패키지가 제공하는 함수를 실행하면 Compiler 타입의 인스턴스를 반환해준다,
 웹팩 설정 객체를 함수 인자로 전달하는데 보통은 설정 파일 `webpack.config.js`에 있는 코드를 가져다 사용한다.
 
+HMR (Hot Modules Rendering)
+
 [webpack-hot-middleware 참고](https://github.com/webpack-contrib/webpack-hot-middleware),
 [webpack-dev-middleware 참고](https://webpack.js.org/guides/development/#using-webpack-dev-middleware),
 [webpack-dev-middleware github](https://github.com/webpack/webpack-dev-middleware)
@@ -315,3 +320,35 @@ if(module.hot) {
   }
 }
 ```
+
+* CSS Build HMR 옵션 설정       
+링크 참고 [mini-css-extract-plugin HMR](https://github.com/webpack-contrib/mini-css-extract-plugin#hot-module-reloading-hmr)
+```js
+{
+  test: /\.(sa|sc|c)ss$/,
+  use: [
+    process.env.NODE_ENV === 'development' ? 'style-loader'
+    : {
+      loader: MiniCssExtractPlugin.loader,
+      options: {
+        publicPath: '/',
+      }
+    },
+    'css-loader',
+    'sass-loader'
+  ]
+}
+```
+개발 모드에서 `.scss` import시 에러 발생     
+[이슈 참고](https://github.com/webpack-contrib/mini-css-extract-plugin/issues/288)
+```
+Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):
+ReferenceError: document is not defined
+```
+해결하기 위해 MiniCssExtractPlugin 플러그인 모드 구분해서 사용
+
+### 10. webpack 옵션
+1. `resolve`
+import 파일 경로 설정
+
+2. `new OptimizeCSSAssetsPlugin()` CSS min 압축파일 만들기 
