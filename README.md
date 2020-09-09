@@ -236,11 +236,10 @@ devServer: {
 ```
 
 ### 9. webpack-dev-middleware, webpack-hot-middleware
+`HMR (Hot Modules Rendering)` 목표     
 webpack-dev-middleware는 웹팩으로 빌드한 정적파일을 처리하는 익스프레스 스타일 미들웨어이다.
 웹팩 패키지가 제공하는 함수를 실행하면 Compiler 타입의 인스턴스를 반환해준다,
 웹팩 설정 객체를 함수 인자로 전달하는데 보통은 설정 파일 `webpack.config.js`에 있는 코드를 가져다 사용한다.
-
-HMR (Hot Modules Rendering)
 
 [webpack-hot-middleware 참고](https://github.com/webpack-contrib/webpack-hot-middleware),
 [webpack-dev-middleware 참고](https://webpack.js.org/guides/development/#using-webpack-dev-middleware),

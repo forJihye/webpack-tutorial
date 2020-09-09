@@ -16,12 +16,12 @@ document.body.appendChild(h2);
 const h3 = createElement('h3', {innerText: 'webpack'});
 document.body.appendChild(h3); 
 
-// let i = 0
-// const interval = setInterval(() => {
-//   i++;
-//   console.log(i);
-//   if(i === 10) clearInterval(interval);
-// }, 1000);
+let i = 0
+const interval = setInterval(() => {
+  i++;
+  console.log(i);
+  if(i === 10) clearInterval(interval);
+}, 1000);
 
 const timeout = setTimeout(() => {
   console.log('hi')
