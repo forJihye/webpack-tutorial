@@ -40,26 +40,19 @@ async function runServer() {
     console.clear();
     log(chalk.green('Server running at :', chalk.underline(`http://localhost:${options.computedPort}`)));
   });
-  
+
   const webpackDevMiddleware = WebpackDevMiddleware(compiler, {
     stats: 'minimal',
     historyApiFallback: true,
   });
   const webpackHotMiddleware = WebpackHotMiddleware(compiler);
-  // const expressStaticMiddleware = express.static(path.resolve(compiler.outputPath, '..'));
   const RESULT_FILE = path.join(compiler.outputPath, 'index.html');
   const staticMiddleware = async (req, res, next) => {
     if (!req.method === 'GET') return next();
-    
-    // console.log(path.join(compiler.outputPath, '..', req.url));
-    // if (fs.existsSync(path.join(compiler.outputPath, '..', req.url))) {
-    //   return expressStaticMiddleware(req, res, next);
-    // }
     compiler.outputFileSystem.readFile(RESULT_FILE, (err, result) => {
       if (err) return next(err);
-  
       res.set('content-type','text/html');
-      res.send(result);
+      res.send(result); // index.html
       res.end();
     });
   };
@@ -74,10 +67,8 @@ async function runServer() {
   return server;
 };
 
-pc.on('message', ([type, data]) => {
-  if (type === 'port') runServer(data);
-});
-
-pc.send(['load']);
+pc.on('message', ([type, data]) => (type === 'port') && runServer(data));
+pc.send(['load']);  
 
 !globalThis.process.send && runServer(port);
+  

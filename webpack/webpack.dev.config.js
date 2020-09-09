@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
+// path.resolve() => 절대경로로 만듬
 const pathResolve = (...v) => path.resolve(__dirname, '..', ...v);
 const isDev = process.env.NODE_ENV === 'development';
 const jsconfig = require(pathResolve('jsconfig'));
@@ -18,15 +19,15 @@ module.exports = {
     filename: '[name].js'
   },
   devServer: {
-    contentBase: path.join(__dirname, 'src'),
-    noInfo: true,
-    inline: true
-  },
+    contentBase: path.join(__dirname, 'src'), //__dirname/src
+    noInfo: true,   
+    inline: true     
+  },  
   module: {
-    rules: [
+    rules: [  
       {
         test: /\.(js|jsx)$/,
-        exclude: ['/node_modules', path.resolve('src')],
+        exclude: ['/node_modules', path.resolve('src')], 
         use: ['babel-loader']
       },
       {
@@ -51,10 +52,10 @@ module.exports = {
   resolve: {
     extensions: ['.js'],
     alias: Object
-      .keys(paths)
-      .filter(key => key.slice(-1) === '*')
+      .keys(paths) // '~/*'
+      .filter(key => key.slice(-1) === '*') // [~,*]
       .reduce((acc, key) => Object.assign(acc, {[key.slice(0, -2)]: pathResolve(paths[key][0].slice(0, -2))}), {})
-    ,
+    , //
   },
   plugins: [
     new HtmlWebpackPlugin({template: './public/index.html'}),
