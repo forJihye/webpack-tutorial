@@ -352,3 +352,42 @@ ReferenceError: document is not defined
 import 파일 경로 설정
 
 2. `new OptimizeCSSAssetsPlugin()` CSS min 압축파일 만들기 
+
+### 11. 참고
+```js
+if(module.hot) {
+  let prevTimeoutIndex = -1;
+  let prevIntervalIndex = -1;
+  let prevRAFIndex = -1;
+  module.hot.accept((err) => { // 모듈의 의존사항이 갱신 될 때 호출 (업데이트)
+    console.log('err', err);
+  });
+
+  // 현재 모듈이 무효화되어 HMR 업데이트가 적용될 때이를 폐기하고 다시 생성
+  module.hot.dispose(data => {
+    console.log(module.hot.status());
+    const tIdx = setTimeout(() => {});
+    for (let i = prevTimeoutIndex; i < tIdx; i++) clearTimeout(i);
+    prevTimeoutIndex = tIdx;
+
+    const iIdx = setInterval(() => {});
+    for (let i = prevIntervalIndex; i < iIdx; i++) clearInterval(i);
+    prevIntervalIndex = iIdx;
+
+    const rIdx = requestAnimationFrame(() => {});
+    for (let i = prevRAFIndex; i < rIdx; i++) cancelAnimationFrame(i);
+    prevRAFIndex = rIdx;
+  });
+}
+```
+
+`setTimeout(() => {})` 를 콘솔로 찍어봤을 때, 숫자가 나오는데 그 숫자의 의미는 해당 브라우저에서 setTimeout 함수 사용 횟수이다.
+`setTimeout` 를 해제하기 위해 `clearTimeout` 함수를 이용하는데 사용법은 다음과 같다
+```js
+const timeout = setTimeout(() => console.log('hi'), 1000);
+clearTimeouf(timeout);
+```
+이렇게 clearTimeout를 사용하는데 함수 인자값은 `setTimeout`를 담고 있는 변수 즉 숫자인건데, 그 숫자는 해당 `setTimeout` 함수의 `key` 값 인것이다. 
+`...setInterval, requestAnimationFrame` 도 만찬가지
+
+위 코드가 하는 기능은 HMR 모듈이 다시 생성될 때 수정 전에 사용되었던 `setTimeout, setInterval, requestAnimationFrame` 함수를 모두 멈추고 다시 실행되로록 해준다. (함수들이 겹치지 않기위해)
