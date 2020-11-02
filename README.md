@@ -393,5 +393,13 @@ clearTimeouf(timeout);
 
 -----
 ### jsconfig.json
-
-
+```js
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  }
+}
+```
