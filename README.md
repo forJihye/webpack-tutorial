@@ -221,6 +221,9 @@ devServer: {
   }
 }
 ```
+`npm run start` 실행 시 아래와 같은 에러 발생시
+webpack 과 webpack-dev-server 버전이 서로간 충돌로 인해서 버전을 맞춰주면된다.
+>Error: Cannot find module 'webpack-cli/bin/config-yargs'
 
 ### 8. inline-source-map
 예를들어 a.js, b.js, c.js 세가지 파일을 bundle.js 하나의 파일로 번들링 했을 때, a.js 파일에서 에러가 발생시
