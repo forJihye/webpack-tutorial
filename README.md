@@ -51,7 +51,18 @@ npm i webpack webpack-cli --save-dev
 npm install -save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader clean-webpack-plugin css-loader html-loader file-loader url-loader html-webpack-plugin mini-css-extract-plugin node-sass react react-dom sass-loader style-loader webpack webpack-cli webpack-dev-server webpack-dev-middleware
 ```
 4. `webpack.config.js` 파일 생성
+```js
+const path = require('path')
 
+module.exports = {
+  mode: 'development', // webpack 빌드 옵션 1. development = 빠르게 빌드, 2. production = 최적화 빌드, 3. none 
+  entry: './src/index.js', // webpack이 빌드할 파일 경로
+  output: { // 빌드 후 명시되어있는 정보를 통해 빌드파일 생성
+    filename: '[name].bundle.js', // 파일명
+    path: path.resolve(__dirname, 'dist') // 저장될 디렉터리
+  }
+}
+```
 5. `package.json` 내용수정
 ```json
 ... 
